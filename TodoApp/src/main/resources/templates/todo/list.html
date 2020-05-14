@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>List Todo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+	<div class="container">
+		<h1 th:text="#{value.listTodo} + ':'"></h1>
+		<form th:action="@{/todo/search}">
+		  <label for="key" th:text="検索："></label>
+		  <input type="search" id="key" name="key" >
+		  <input type="submit">
+		</form>
+		<table class="table table-bordered">
+	    <thead>
+	      <tr>
+	        <th>期限</th>
+	        <th>タイトル</th>
+	        <th>内容</th>
+	        <th>操作</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr th:each="todo: ${todoList}" th:classappend="(*{todo.getStatus()} == 0)? table-light: ((*{todo.getStatus()} == 1)? table-danger: ((*{todo.getStatus()} == 2)? table-active: table-success))">
+	        <td th:text="*{todo.getStart_date() + ' - ' + todo.getEnd_date()}"></td>
+	        <td th:text="*{todo.getTitle()}"></td>
+	        <td th:text="*{todo.getContent()}"></td>
+	        <td>
+	        	<a th:text="編集" th:href="'javascript:todo_edit(' + *{todo.getTodo_id()} + ')'"></a>
+	        	<a th:text="完了" th:href="'javascript:todo_done(' + *{todo.getTodo_id()} + ')'"></a>
+	        	<!-- <a th:text="削除" th:href="'javascript:todo_delete(' + *{todo.getTodo_id()} + ')'"></a> -->
+	        	<a th:text="削除" th:href="@{/todo/delete/} + *{todo.getTodo_id()}"></a>
+	       	</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	  <a th:href="@{/todo/add}" th:text="#{value.addTodo}" class="btn btn-success"></a>
+  </div>
+  <form id="frm_edit" method="post" th:action="@{/todo/edit}">
+  	<input type="hidden" id="todo_id" name="todo_id" value="">
+  </form>
+</body>
+<script tyle="text/javascript" th:inline="javascript">
+	function todo_edit(todo_id) {
+		$("#todo_id").val(todo_id);
+		$("#frm_edit").submit();
+	}
+	function todo_done(todo_id) {
+		var data = {
+			"todo_id": todo_id
+		};
+	    var url = /*[[@{/todo/done}]]*/;
+	    var redirect_url = /*[[@{/todo/list}]]*/;
+		if (window.confirm("完了してもよろしいでしょうか？")) {
+			$.ajax({
+			   url: url,  //送信先のServlet URL（適当に変えて下さい）
+			   type: "POST",          //GET / POST
+			   dataType: 'json',
+			   data: data,        //リクエストJSON
+			   async: true,           //true:非同期(デフォルト), false:同期
+			   success: function(res) {
+				   console.log(res);
+				   if (res == "true") {
+				   		alert("完了しました。");
+					    window.redirect(redirect_url);
+				   } else {
+					   alert("完了出来ませんでした。");
+				   }
+			   },
+			   error : function(XMLHttpRequest, textStatus, errorThrown) {
+			     alert("リクエスト時になんらかのエラーが発生しました：" + textStatus +":\n" + errorThrown);
+			   }
+			});
+		}
+	}
+/* 	function todo_delete(todo_id) {
+		
+	} */
+</script>
+</html>

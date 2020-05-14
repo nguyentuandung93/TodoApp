@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+	<link rel="stylesheet" href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/build/css/bootstrap-datetimepicker.css">
+	
+	<script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.3/locale/ja.min.js"></script>
+	<script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/v4.0.0/src/js/bootstrap-datetimepicker.js"></script>
+	<title>Edit Todo</title>
+</head>
+<body>
+	<h1 th:text="TODO編集"></h1>
+	<form th:action="@{/todo/put}" th:object="${todo}" method="post" id="frm_edit" class="col-md-9 col-sm-9 col-xm-9">
+		<div class="form-group">
+			<label for="title" th:text="タイトル"></label>
+			<input type="text" th:field="*{title}" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="content" th:text="内容"></label>
+			<textarea type="text" th:field="*{content}" class="form-control"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="start_date" th:text="開始日時"></label>
+			<div class="input-group">
+				<input type="text" class="form-control date" th:field="*{start_date}"/>
+				<div class="input-group-addon">
+			        <span class="glyphicon glyphicon-th"></span>
+			    </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="end_date" th:text="終了日時"></label>
+			<div class="input-group">
+				<input type="text" class="form-control date" th:field="*{end_date}"/>
+				<div class="input-group-addon">
+			        <span class="glyphicon glyphicon-th"></span>
+			    </div>
+			</div>
+		</div>
+		<input type="hidden" th:field="*{todo_id}"/>
+		<a href="javascript:regist_todo()" type="button" class="btn btn-success" th:text="登録"></a>
+	</form>
+</body>
+<script type="text/javascript">
+	$(function () {
+	  $('.date').datetimepicker({
+	    locale: 'ja',
+	    format : 'YYYY-MM-DD HH:mm:ss'
+	  });
+	});
+	function regist_todo() {
+		if (input_check() == 0) {
+			$("#frm_edit").submit();
+		}
+	}
+	function input_check() {
+		var err_flg = 0;
+		var title = $("#title").val();
+		var content = $("#content").val();
+		var start_date = $("#start_date").val();
+		var end_date = $("#end_date").val();
+		if (title == "") {
+			alert("タイトルを入力してください");
+			err_flg++;
+			return err_flg;
+		}
+		if (content == "") {
+			alert("内容を入力してください");
+			err_flg++;
+			return err_flg;
+		}
+		if (start_date == "") {
+			alert("開始日時を入力してください");
+			err_flg++;
+			return err_flg;
+		}
+		if (end_date == "") {
+			alert("終了日時を入力してください");
+			err_flg++;
+			return err_flg;
+		}
+		if (new Date(start_date) >= new Date(end_date)) {
+			alert("開始日時は終了日時の前に入力してください");
+			err_flg++;
+			return err_flg;
+		}
+		return err_flg;
+	}
+</script>
+</html>

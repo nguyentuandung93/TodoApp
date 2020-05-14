@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+	<link th:href="@{/css/main.css}" rel="stylesheet"/>
+	<script th:src="@{/js/boostrap.min.js}"></script>
+	<title>Success Todo</title>
+</head>
+<body>
+	<h1>Todo</h1>
+	<h1 style="color: green" th:text="#{message.success}"></h1>
+	
+	<a th:href="@{/todo/list}" th:text="#{value.viewListTodo}" class="btn btn-primary"></a>
+</body>
+</html>
