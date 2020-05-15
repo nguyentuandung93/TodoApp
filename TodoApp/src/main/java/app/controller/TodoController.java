@@ -1,22 +1,26 @@
 package app.controller;
 
+import java.util.Enumeration;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
-
 import app.model.Todo;
 import app.service.TodoService;
-
 
 @Controller
 public class TodoController {
@@ -25,10 +29,10 @@ public class TodoController {
 	private TodoService todoService;
 	
 	// Todo Index画面
-	@RequestMapping(value = "/todo", method = {RequestMethod.GET, RequestMethod.POST})
-	public String index() {
-		return "todo/index";
-	}
+//	@RequestMapping(value = "/todo", method = RequestMethod.POST)
+//	public String  index() {
+//		return "todo/index";
+//	}
 	// Todoリスト
 	@RequestMapping(value = "/todo/list", method= {RequestMethod.GET, RequestMethod.POST})
 	public String list(Model model) {
@@ -47,32 +51,39 @@ public class TodoController {
 				.map(t -> "todo/success")
 				.orElse("todo/failed");
 	}
-	// Todoを削除
-	@RequestMapping(value = "/todo/delete/{todo_id}", method= RequestMethod.GET)
-	public String deleteTodo(@PathVariable("todo_id") int todo_id) {
-		return Optional.ofNullable(todoService.updateDelFlg(todo_id))
-				.map(t -> "todo/success")
-				.orElse("todo/failed");
-	}
-	
-	// Todoを編集
-	@RequestMapping(value = "/todo/edit")
-	public String editTodo(@RequestParam(value="todo_id") int todo_id, Model model) {
+	// Todo編集フォーム
+	@RequestMapping(value = "/todo/{todo_id}", method = RequestMethod.GET)
+	public String viewTodo(@PathVariable("todo_id") String id, Model model) {
+		int todo_id = Integer.parseInt(id);
 		model.addAttribute("todo", todoService.findById(todo_id));
 		return "todo/edit";
 	}
-	@RequestMapping(value = "/todo/put", method= RequestMethod.POST)
-	public String putTodo(@ModelAttribute Todo todo) {
-		return Optional.ofNullable(todoService.put(todo))
-				.map(t -> "todo/success")
-				.orElse("todo/failed");
-	}
+
 	// Todoを完了する
-	@RequestMapping(value = "/todo/done", method= RequestMethod.POST)
+	@RequestMapping(value = "/todo/done/{todo_id}", method= RequestMethod.PUT)
+	public ResponseEntity<Boolean>  doneTodo(@PathVariable(value="todo_id") String id) {
+		int todo_id = Integer.parseInt(id);
+		Boolean result = todoService.updateStatus(todo_id);
+		return ResponseEntity.ok().body(result);
+	}
+	// Todoを削除
+	@RequestMapping(value = "/todo/{todo_id}", method= RequestMethod.DELETE)
+	public ResponseEntity<Boolean> deleteTodo(@PathVariable("todo_id") String id) {
+		int todo_id = Integer.parseInt(id);
+		Boolean result = todoService.updateDelFlg(todo_id);
+		return ResponseEntity.ok().body(result);
+	}
+	// Todo編集を登録
+	@RequestMapping(value = "/todo", method = RequestMethod.POST)
 	@ResponseBody
-	public String  doneTodo(@RequestParam(value="todo_id") int todo_id, Model model) {
-		String result = todoService.updateStatus(todo_id);
-		Gson gson = new Gson();
-		return gson.toJson(result);
+	public ResponseEntity<Boolean> editTodo(HttpServletRequest request) {
+		Todo todo = new Todo();
+		todo.setTodo_id(Integer.parseInt(request.getParameter("todo_id")));
+		todo.setTitle(request.getParameter("title"));
+		todo.setContent(request.getParameter("content"));
+		todo.setStart_date(request.getParameter("start_date"));
+		todo.setEnd_date(request.getParameter("end_date"));
+		Boolean result = todoService.updateAll(todo);
+		return ResponseEntity.ok().body(result);
 	}
 }

@@ -44,22 +44,13 @@ public class TodoService {
 		todo.setStatus(status);
 		return todoRepository.save(todo);
 	}
-	// 削除
-	public Boolean updateDelFlg(int todo_id) {
-		String now = CommonController.getNow();
-		int user_id = 1;
-		if (todoRepository.updateDelFlg(todo_id, user_id, now) > 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 	// Todoを編集
 	public Optional<Todo> findById(int todo_id) {
 		return todoRepository.findById(todo_id);
 	}
 	// Todoを編集
-	public Boolean put(Todo todo) {
+	public Boolean updateAll(Todo todo) {
 		String now = CommonController.getNow();
 		todo.setUpdate_date(now);
 		todo.setUpdate_user_id(1);
@@ -72,20 +63,18 @@ public class TodoService {
 			status = 2;
 		}
 		todo.setStatus(status);
-		if (todoRepository.updateAll(todo) > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return (todoRepository.updateAll(todo) > 0)? true: false;
 	}
 	// Todoのステータスを更新
-	public String updateStatus(int todo_id) {
+	public Boolean updateStatus(int todo_id) {
 		String now = CommonController.getNow();
 		int user_id = 1;
-		if (todoRepository.updateStatus(todo_id, user_id, now) > 0) {
-			return "true";
-		} else {
-			return "false";
-		}
+		return (todoRepository.updateStatus(todo_id, user_id, now) > 0)? true: false;
+	}
+	// 削除
+	public Boolean updateDelFlg(int todo_id) {
+		String now = CommonController.getNow();
+		int user_id = 1;
+		return (todoRepository.updateDelFlg(todo_id, user_id, now) > 0)? true: false;
 	}
 }

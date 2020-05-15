@@ -32,44 +32,48 @@
 	        <td th:text="*{todo.getTitle()}"></td>
 	        <td th:text="*{todo.getContent()}"></td>
 	        <td>
-	        	<a th:text="編集" th:href="'javascript:todo_edit(' + *{todo.getTodo_id()} + ')'"></a>
-	        	<a th:text="完了" th:href="'javascript:todo_done(' + *{todo.getTodo_id()} + ')'"></a>
-	        	<!-- <a th:text="削除" th:href="'javascript:todo_delete(' + *{todo.getTodo_id()} + ')'"></a> -->
-	        	<a th:text="削除" th:href="@{/todo/delete/} + *{todo.getTodo_id()}"></a>
+	        	<a th:text="編集" th:href="'javascript:edit_todo(' + *{todo.getTodo_id()} + ')'"></a>
+	        	<a th:text="完了" th:href="'javascript:complete_todo(' + *{todo.getTodo_id()} + ')'"></a>
+	        	<a th:text="削除" th:href="'javascript:delete_todo(' + *{todo.getTodo_id()} + ')'"></a>
+	        	<!-- <a th:text="削除" th:href="@{/todo/delete/} + *{todo.getTodo_id()}"></a> -->
 	       	</td>
 	      </tr>
 	    </tbody>
 	  </table>
 	  <a th:href="@{/todo/add}" th:text="#{value.addTodo}" class="btn btn-success"></a>
   </div>
-  <form id="frm_edit" method="post" th:action="@{/todo/edit}">
+  <form id="frm_edit" method="GET">
   	<input type="hidden" id="todo_id" name="todo_id" value="">
   </form>
 </body>
-<script tyle="text/javascript" th:inline="javascript">
-	function todo_edit(todo_id) {
+<script type="text/javascript" th:inline="javascript">
+	// Todoを編集
+	function edit_todo(todo_id) {
+		var url = /*[[@{/todo/}]]*/;
 		$("#todo_id").val(todo_id);
+		$("#frm_edit").attr("action", url + todo_id);
 		$("#frm_edit").submit();
 	}
-	function todo_done(todo_id) {
+	// Todoを完了
+	function complete_todo(todo_id) {
 		var data = {
 			"todo_id": todo_id
 		};
-	    var url = /*[[@{/todo/done}]]*/;
+	    var url = /*[[@{/todo/done/}]]*/;
 	    var redirect_url = /*[[@{/todo/list}]]*/;
 		if (window.confirm("完了してもよろしいでしょうか？")) {
 			$.ajax({
-			   url: url,  //送信先のServlet URL（適当に変えて下さい）
-			   type: "POST",          //GET / POST
+			   url: url + todo_id,
+			   type: "PUT",
 			   dataType: 'json',
-			   data: data,        //リクエストJSON
-			   async: true,           //true:非同期(デフォルト), false:同期
+			   data: data,
+			   async: true, //true:非同期(デフォルト), false:同期
 			   success: function(res) {
-				   if (res == "true") {
-				   		alert("完了しました。");
+				   if (res == true) {
+				   		alert("Todoが完了しました。");
 					    window.location.replace(redirect_url);
 				   } else {
-					   alert("完了出来ませんでした。");
+					   alert("Todoの完了が出来ませんでした。");
 				   }
 			   },
 			   error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -78,8 +82,33 @@
 			});
 		}
 	}
-/* 	function todo_delete(todo_id) {
-		
-	} */
+	// Todoを削除
+	function delete_todo(todo_id) {
+		var data = {
+			"todo_id": todo_id
+		};
+	    var url = /*[[@{/todo/}]]*/;
+	    var redirect_url = /*[[@{/todo/list}]]*/;
+		if (window.confirm("完了してもよろしいでしょうか？")) {
+			$.ajax({
+			   url: url + todo_id,
+			   type: "DELETE",
+			   dataType: 'json',
+			   data: data,
+			   async: true, //true:非同期(デフォルト), false:同期
+			   success: function(res) {
+				   if (res == true) {
+				   		alert("Todoを削除しました。");
+					    window.location.replace(redirect_url);
+				   } else {
+					   alert("Todoが削除出来ませんでした。");
+				   }
+			   },
+			   error : function(XMLHttpRequest, textStatus, errorThrown) {
+			     alert("リクエスト時になんらかのエラーが発生しました：" + textStatus +":\n" + errorThrown);
+			   }
+			});
+		}
+	}
 </script>
 </html>
