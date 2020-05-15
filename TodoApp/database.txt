@@ -1,5 +1,9 @@
 URL: http://localhost:8080/todo/
 DB:
+user: root
+pass: root
+db name: prj_db
+SQL Query:
 CREATE TABLE `t_todos` (
 	`todo_id` INT(10,0) NOT NULL AUTO_INCREMENT,
 	`user_id` INT(10,0) NOT NULL COMMENT 'ユーザーID',
