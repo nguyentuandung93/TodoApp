@@ -6,10 +6,10 @@ db name: prj_db
 SQL Query:
 CREATE TABLE `t_todos` (
 	`todo_id` INT(10,0) NOT NULL AUTO_INCREMENT,
-	`user_id` INT(10,0) NOT NULL COMMENT 'ãƒ¦ãƒ¼ã‚¶ãƒ¼ID',
+	`user_id` INT(10,0) NOT NULL COMMENT 'ƒ†[ƒU[ID',
 	`title` VARCHAR(2048) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
 	`content` VARCHAR(2048) NULL DEFAULT '0' COLLATE 'utf8_general_ci',
-	`status` TINYINT(1) UNSIGNED ZEROFILL NOT NULL COMMENT 'ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹:0:äºˆå®šæœŸé–“å‰, 1:äºˆå®šæœŸé–“ä¸­, 2:äºˆå®šæœŸé–“éŽãŽ,3:è§£æ±ºæ¸ˆ',
+	`status` TINYINT(1) UNSIGNED ZEROFILL NOT NULL COMMENT 'ƒXƒe[ƒ^ƒX:0:—\’èŠúŠÔ‘O, 1:—\’èŠúŠÔ’†, 2:—\’èŠúŠÔ‰ß‚¬,3:‰ðŒˆÏ',
 	`start_date` DATETIME NULL DEFAULT NULL,
 	`end_date` DATETIME NULL DEFAULT NULL,
 	`del_flg` TINYINT(1) UNSIGNED ZEROFILL NOT NULL DEFAULT '0',
@@ -19,7 +19,7 @@ CREATE TABLE `t_todos` (
 	`update_user_id` INT(10,0) NULL DEFAULT NULL,
 	PRIMARY KEY (`todo_id`) USING BTREE
 )
-COMMENT='Todoãƒ†ãƒ¼ãƒ–ãƒ«'
+COMMENT='Todoƒe[ƒuƒ‹'
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1
