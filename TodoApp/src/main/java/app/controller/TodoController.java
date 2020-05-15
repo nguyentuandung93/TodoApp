@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
 
 import app.model.Todo;
 import app.service.TodoService;
@@ -70,11 +73,10 @@ public class TodoController {
 	}
 	// Todoを完了する
 	@RequestMapping(value = "/todo/done", method= RequestMethod.POST)
-	public Map<String, String>  doneTodo(@RequestParam(value="todo_id") Long todo_id, Model model) {
+	@ResponseBody
+	public String  doneTodo(@RequestParam(value="todo_id") Long todo_id, Model model) {
 		String result = todoService.updateStatus(todo_id);
-		HashMap<String, String> map = new HashMap<>();
-		map.put("status", result);
-	    map.put("message", "");
-	    return map;
+		Gson gson = new Gson();
+		return gson.toJson(result);
 	}
 }
