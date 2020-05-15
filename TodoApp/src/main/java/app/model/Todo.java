@@ -14,7 +14,7 @@ import lombok.Data;
 public class Todo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long todo_id;
+	private int todo_id;
 	private int user_id;
 	private String title;
 	private String content;

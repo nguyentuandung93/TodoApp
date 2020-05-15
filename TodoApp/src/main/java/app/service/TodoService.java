@@ -45,7 +45,7 @@ public class TodoService {
 		return todoRepository.save(todo);
 	}
 	// 削除
-	public Boolean updateDelFlg(Long todo_id) {
+	public Boolean updateDelFlg(int todo_id) {
 		String now = CommonController.getNow();
 		int user_id = 1;
 		if (todoRepository.updateDelFlg(todo_id, user_id, now) > 0) {
@@ -55,7 +55,7 @@ public class TodoService {
 		}
 	}
 	// Todoを編集
-	public Optional<Todo> findById(Long todo_id) {
+	public Optional<Todo> findById(int todo_id) {
 		return todoRepository.findById(todo_id);
 	}
 	// Todoを編集
@@ -79,7 +79,7 @@ public class TodoService {
 		}
 	}
 	// Todoのステータスを更新
-	public String updateStatus(Long todo_id) {
+	public String updateStatus(int todo_id) {
 		String now = CommonController.getNow();
 		int user_id = 1;
 		if (todoRepository.updateStatus(todo_id, user_id, now) > 0) {

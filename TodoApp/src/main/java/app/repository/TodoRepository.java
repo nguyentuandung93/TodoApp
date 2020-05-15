@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import app.model.Todo;
 
 @Repository
-public interface TodoRepository extends JpaRepository<Todo, Long>{
+public interface TodoRepository extends JpaRepository<Todo, Integer>{
 	
 	@Query(value = "SELECT todo FROM Todo todo WHERE todo.del_flg = 0 ORDER BY todo.start_date ASC")
 	List<Todo> findAll();
@@ -20,7 +20,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long>{
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE Todo todo SET todo.del_flg = 1, todo.update_user_id = :update_user_id, todo.update_date = :update_date WHERE todo.todo_id = :todo_id")
-	Integer updateDelFlg(@Param("todo_id") Long todo_id, @Param("update_user_id") int user_id, @Param("update_date") String update_date);
+	Integer updateDelFlg(@Param("todo_id") int todo_id, @Param("update_user_id") int user_id, @Param("update_date") String update_date);
 
 	@Transactional
 	@Modifying
@@ -31,5 +31,5 @@ public interface TodoRepository extends JpaRepository<Todo, Long>{
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE Todo todo SET todo.status = 3, todo.update_user_id = :update_user_id, todo.update_date = :update_date WHERE todo.todo_id = :todo_id")
-	Integer updateStatus(@Param("todo_id") Long todo_id, @Param("update_user_id") int user_id, @Param("update_date") String update_date);
+	Integer updateStatus(@Param("todo_id") int todo_id, @Param("update_user_id") int user_id, @Param("update_date") String update_date);
 }

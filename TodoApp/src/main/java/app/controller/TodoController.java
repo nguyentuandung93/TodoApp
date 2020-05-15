@@ -53,7 +53,7 @@ public class TodoController {
 	}
 	// Todoを削除
 	@RequestMapping(value = "/todo/delete/{todo_id}", method= RequestMethod.GET)
-	public String deleteTodo(@PathVariable("todo_id") Long todo_id) {
+	public String deleteTodo(@PathVariable("todo_id") int todo_id) {
 		return Optional.ofNullable(todoService.updateDelFlg(todo_id))
 				.map(t -> "todo/success")
 				.orElse("todo/failed");
@@ -61,7 +61,7 @@ public class TodoController {
 	
 	// Todoを編集
 	@RequestMapping(value = "/todo/edit")
-	public String editTodo(@RequestParam(value="todo_id") Long todo_id, Model model) {
+	public String editTodo(@RequestParam(value="todo_id") int todo_id, Model model) {
 		model.addAttribute("todo", todoService.findById(todo_id));
 		return "todo/edit";
 	}
@@ -74,7 +74,7 @@ public class TodoController {
 	// Todoを完了する
 	@RequestMapping(value = "/todo/done", method= RequestMethod.POST)
 	@ResponseBody
-	public String  doneTodo(@RequestParam(value="todo_id") Long todo_id, Model model) {
+	public String  doneTodo(@RequestParam(value="todo_id") int todo_id, Model model) {
 		String result = todoService.updateStatus(todo_id);
 		Gson gson = new Gson();
 		return gson.toJson(result);
